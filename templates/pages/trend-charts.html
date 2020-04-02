@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{%block content%}
+
+<body>
+
+  <div class="dark-background">
+
+    <ul class="nav nav-pills justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'maps' %}">Choropleth</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="{% url 'charts' %}">Trend Charts</a>
+      </li>
+    </ul>
+
+        <div class="container">
+          
+          <div class="alert alert-success alert-dismissible display-landscape fade show" role="alert" id="success-alert">
+            Rendering chart .. Please wait a moment.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+            <div class="alert alert-danger display-portrait alert-dismissible" role="alert">
+              Please rotate your phone to landscape orientation for a better viewing experience.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"> 
+                <span aria-hidden="true">&times;</span>
+            </div>
+             <div class="element-dark input-container ">
+              <form action="{% url 'charts' %}" method="POST">
+              {%csrf_token%}
+              <h3>Choose Country</h3>
+              <div class="input-group mt-4">
+  
+                  <div class="input-group-prepend">
+                    
+                      <label class="input-group-text" for="inputGroupSelect01">Country</label>
+                   
+                  </div>
+                  
+                   <select class="custom-select" id="inputGroupSelect01" onchange="this.form.submit()" name="name">
+                     
+                    <option selected>-- Choose Country --</option>
+                    {%for country in countries%}
+                      <option>{{country}}</option>
+                    {%endfor%}
+                  </select>                
+                </div>
+              </form>
+          </div>
+        
+        {%if dates%}
+          <div class="mt-4">
+            <div class="chartpadding d-flex element-dark">
+                <div class="m-auto"> 
+                  <canvas id="line-chart"></canvas>
+                </div>    
+            </div>
+          </div>
+        {%endif%}
+  
+        </div>
+  </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+      <script>
+        var ctx = document.getElementById('line-chart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: {{dates | safe}},
+                datasets: [{
+                    label: 'Cases Reported',
+                    backgroundColor: 'rgb(138, 0, 0)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: {{cases | safe}}
+                }]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+       
+      </script>
+
+</body>
+{%endblock%}

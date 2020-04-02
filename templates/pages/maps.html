@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{%load static%}
+{%load humanize%}
+{%block content%}
+<div class="dark-background">
+    <ul class="nav nav-pills justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'maps' %}">Choropleth</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'charts' %}">Trend Charts</a>
+        </li>
+      </ul>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-7 mt-3">
+
+            <div class="col-lg-12">
+                <div class="lead text-center mb-3">Confirmed Cases</div>
+                {{map_html|safe}}
+            </div>
+            <div class="col-lg-12 mt-3">
+                <div class="lead text-center mb-3">Total Deaths</div>
+                {{death_html|safe}}
+              
+            </div>
+            <div class="col-lg-12 mt-3">
+                <div class="lead text-center mb-3">Total Recovered</div>
+                {{recovered_html|safe}}
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 col-lg-offset-1 mt-3">
+
+            <div class="element-dark data-container">
+
+                <h3 class="text-center mb-4">Data</h3>
+                <p>Total Confirmed Cases : <span class="yellow">{{confirmed_cases|intcomma}}</span></p>
+                <p>Total Deaths : <span class="red">{{death_cases|intcomma}}</span></p>
+                <p class="mb-4">Total Recovered :  <span class="green">{{recovered_cases|intcomma}}</span></p>
+
+                <h3 class="text-center">Stats By Location</h3>
+                <p class="lead mb-4 text-center">(Total Cases Reported)</p>
+                <div class="location-container">
+                
+                    {% for stats in country_stats %}
+                        <p class="element-dark location"><span>{{stats.0}}</span> <span class="red">{{stats.1|intcomma}}</span></p>
+                    {%endfor%}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    
+{%endblock%}
+    
